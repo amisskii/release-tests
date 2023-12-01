@@ -13,7 +13,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
 	github.com/prometheus/common v0.44.0
-	github.com/tektoncd/operator v0.68.0
+	github.com/tektoncd/operator v0.67.0
 	github.com/tektoncd/pipeline v0.50.1
 	github.com/tektoncd/triggers v0.25.0
 	go.opencensus.io v0.24.0
