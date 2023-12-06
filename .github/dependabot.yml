@@ -6,9 +6,5 @@ updates:
       interval: "daily"
     allow:
       - dependency-name: "github.com/tektoncd/operator" 
-    groups:
-      go:
-        patterns:
-        - "github.com/tektoncd/operator"
         update-types:
           - "minor"
