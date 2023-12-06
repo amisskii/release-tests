@@ -1,10 +1,11 @@
 version: 2
 updates:
   - package-ecosystem: "gomod"
-    directory: "/"  
+    directory: "/"
     schedule:
       interval: "daily"
     allow:
-      - dependency-name: "github.com/tektoncd/operator" 
-        update-types:
-          - "minor"
+      - dependency-name: "github.com/tektoncd/operator"
+        version-resolver: "auto"
+        version-requirements:
+          - update-types: "minor"
