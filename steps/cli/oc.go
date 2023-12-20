@@ -173,3 +173,11 @@ var _ = gauge.Step("Configure the bundles resolver", func() {
 var _ = gauge.Step("Create secrets for Tekton Results", func() {
 	oc.CreateSecretsForTektonResults()
 })
+
+var _ = gauge.Step("Ensure that tekton results is ready", func() {
+	oc.EnsureResutsReady()
+})
+
+var _ = gauge.Step("Get <resourceType> logs and annotations", func(resourceType string){
+	oc.GetLogsAndAnnotaions(resourceType)
+})
