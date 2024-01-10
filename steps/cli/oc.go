@@ -171,7 +171,11 @@ var _ = gauge.Step("Configure the bundles resolver", func() {
 })
 
 var _ = gauge.Step("Create secrets for Tekton Results", func() {
-	oc.CreateSecretsForTektonResults()
+	if !oc.SecretExists("tekton-results-postgres", "openshift-pipelines") && !oc.SecretExists("tekton-results-tls", "openshift-pipelines"){
+		oc.CreateSecretsForTektonResults()
+	} else {
+		log.Printf("\"tekton-results-postgres\" and \"tekton-results-tls\" secrets already exist")
+	}
 })
 
 var _ = gauge.Step("Ensure that Tekton Results is ready", func() {
