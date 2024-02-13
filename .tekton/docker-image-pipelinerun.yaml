@@ -44,9 +44,9 @@ spec:
               image: quay.io/openshift-pipeline/ci
               script: | 
                 #!/usr/bin/env bash
-                BRANCH_NAME={{target_branch}}
+                BRANCH_NAME={{ target_branch }}
                 IMAGE_NAME="quay.io/openshift-pipeline/${BRANCH_NAME//./}" 
-                echo -n "$IMAGE_NAME" > $(results.image-name.path)
+                echo -n "$IMAGE_NAME" | tee $(results.image-name.path)
       - name: buildah 
         taskRef:
           kind: ClusterTask
