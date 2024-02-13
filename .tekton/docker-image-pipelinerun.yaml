@@ -47,6 +47,7 @@ spec:
               script: | 
                 #!/usr/bin/env bash
                 BRANCH_NAME={{ target_branch }}
+                echo $BRANCH_NAME
                 IMAGE_NAME="quay.io/openshift-pipeline/${BRANCH_NAME//./}" 
                 echo -n "$IMAGE_NAME" | tee $(results.image-name.path)
       - name: buildah 
