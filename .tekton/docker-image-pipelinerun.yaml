@@ -39,6 +39,8 @@ spec:
             value: $(params.revision)
       - name: generate-image-name
         taskSpec: 
+          results: 
+            - name: image-name
           steps: 
             - name: generate-image-name
               image: quay.io/openshift-pipeline/ci
