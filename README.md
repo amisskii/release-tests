@@ -20,7 +20,7 @@ Install Gauge to `/usr/local/bin` by running
 
 ```curl -SsL https://downloads.gauge.org/stable | sh```
 
-or install Gauge to a `<custom path>` using
+or install Gauge to a `<custom path>` usingnfnff
 
 ```curl -SsL https://downloads.gauge.org/stable | sh -s -- --location-[custom path]```
 
