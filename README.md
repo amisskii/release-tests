@@ -9,7 +9,7 @@ Validation of OpenShift Pipeline releases using [Gauge](https://docs.gauge.org/g
 * [Gauge](https://docs.gauge.org/getting_started/installing-gauge.html?os=linux&language=python&ide=vscode)
 
 * Clone this repository
-
+fafaf
 * Need [OpenShift](https://gitlab.cee.redhat.com/tekton/plumbing/) cluster
 
 * Download latest [OpenShift Client](https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/) for your operating system
