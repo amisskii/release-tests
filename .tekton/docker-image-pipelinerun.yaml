@@ -5,7 +5,7 @@ metadata:
   name: docker-image-pipelinerun
   annotations:
     pipelinesascode.tekton.dev/on-cel-expression: |
-      event == "pull_request" && "Dockerfile.CI".pathChanged()
+      event == "pull_request" && files.modified.exists(x, x.matches('Dockerfile.CI'))
     pipelinesascode.tekton.dev/task: "git-clone"
     pipelinesascode.tekton.dev/task-1: "buildah"
     pipelinesascode.tekton.dev/max-keep-runs: "5"
