@@ -9,7 +9,7 @@ RUN gauge config runner_connection_timeout 600000 && \
     gauge config runner_request_timeout 300000
 
 # Copy the tests into /tmp/release-tests
-RUN mkdir /tmp/release-tests
+RUN mkdir /tmp/release-testsfafaf
 WORKDIR /tmp/release-tests
 COPY . .
 
