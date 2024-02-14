@@ -38,29 +38,6 @@ spec:
             value: $(params.repo_url)
           - name: revision
             value: $(params.revision)
-      - name: generate-image-name
-        taskSpec: 
-          results:
-            - name: image-name
-            - name: image-name-timestamp
-          steps: 
-            - name: generate-image-name
-              image: quay.io/openshift-pipeline/ci
-              script: | 
-                #!/usr/bin/env bash
-                BRANCH_NAME={{ target_branch }}
-                TIMESTAMP=$(date +"%Y%m")
-                
-                if [ "$BRANCH_NAME" == "master" ]; then 
-                  BRANCH_NAME=latest
-                elif [[ "$BRANCH_NAME" == release-* ]]; then 
-                  BRANCH_NAME=${BRANCH_NAME#release-}
-                fi
- 
-                IMAGE_NAME="quay.io/openshift-pipeline/ci/$BRANCH_NAME"
-                IMAGE_NAME_TIMESTAMP="quay.io/openshift-pipeline/ci/$BRANCH_NAME"-$TIMESTAMP  
-                echo -n "$IMAGE_NAME" | tee $(results.image-name.path)
-                echo -n "$IMAGE_NAME_TIMESTAP" | tee $(results.image-name-timestamp.path)
       - name: buildah 
         taskRef:
           kind: ClusterTask
