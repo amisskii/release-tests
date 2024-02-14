@@ -6,11 +6,6 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-cel-expression: |
       event == "pull_request" && "Dockerfile.CI".pathChanged()
-    pipelinesascode.tekton.dev/task: "git-clone"
-    pipelinesascode.tekton.dev/task-1: "generate-image-name"
-    pipelinesascode.tekton.dev/task-2: "buildah"
-    pipelinesascode.tekton.dev/task-3: "skopeo-copy"
-    pipelinesascode.tekton.dev/max-keep-runs: "5"
 spec:
   params:
     - name: repo_url
@@ -41,10 +36,13 @@ spec:
             value: $(params.revision)
       - name: generate-image-name
         taskRef: 
+          kind: ClusterTask
           name: generate-image-name
         params: 
           - name: BRANCH_NAME
             value: "{{ target_branch }}"
+        runAfter:
+          - fetch-repository
       - name: buildah 
         taskRef:
           kind: ClusterTask
@@ -54,6 +52,8 @@ spec:
             value: $(tasks.generate-image-name.results.image-name)
           - name: DOCKERFILE
             value: ./Dockerfile.CI
+        runAfter: 
+          - generate-image-name
         workspaces:
           - name: source
             workspace: source
@@ -66,6 +66,9 @@ spec:
             value: $(tasks.generate-image-name.results.image-name)
           - name: destImageUrl
             value: $(tasks.generate-image-name.results.image-name-timestamp)
+        runAfter:
+          - generate-image-name
+          - buildah
 
   workspaces:
     - name: source
