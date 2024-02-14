@@ -41,7 +41,7 @@ spec:
             value: $(params.revision)
       - name: generate-image-name
         taskRef: 
-          name: generate-image-name
+          resolver: cluster
         params: 
           - name: BRANCH_NAME
             value: "{{ target_branch }}"
