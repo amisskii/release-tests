@@ -41,14 +41,8 @@ spec:
             value: $(params.revision)
       - name: generate-image-name
         taskRef: 
-          resolver: cluster
-          params: 
-          - name: kind
-            value: task
-          - name: name
-            value: generate-image-name
-          - name: namespace
-            value: pipelines-ci
+          kind: ClusterTask
+          name: generate-image-name
         params: 
           - name: BRANCH_NAME
             value: "{{ target_branch }}"
