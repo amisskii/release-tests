@@ -46,6 +46,9 @@ spec:
         params: 
           - name: BRANCH_NAME
             value: "{{ target_branch }}"
+        workspaces:
+          - name: source
+            workspace: source
       - name: buildah 
         taskRef:
           kind: ClusterTask
