@@ -48,7 +48,7 @@ spec:
                 BRANCH_NAME={{ target_branch }}
                 IMAGE_NAME=""
                 IMAGE_NAME_TIMESTAMP=""
-                TIMESTAMP=$(date +"%Y%m%d")
+                TIMESTAMP=$(date +"%y%m%d")
                 
                 if [ "$BRANCH_NAME" == "master" ]; then 
                   IMAGE_NAME="quay.io/openshift-pipeline/ci/latest"
