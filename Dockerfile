@@ -10,7 +10,7 @@ RUN gauge config runner_connection_timeout 600000 && \
 
 # Copy the tests into /tmp/release-tests
 RUN mkdir /tmp/release-tests
-WORKDIR /tmp/release-tests
+WORKDIR /tmp/release-testsg
 COPY . .
 
 # Set required permissions for OpenShift usage
