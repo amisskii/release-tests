@@ -50,7 +50,7 @@ spec:
                 IMAGE_NAME_TIMESTAMP=""
                 TIMESTAMP=$(date +"%y%m%d")
 
-                if [ "$BRANCH_NAME" == "master" ]; then 
+                if [ {{ target_branch }} == "master" ]; then 
                   if [ {{ event_type }} == "pull_request" ]; then
                       IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:latest"
                       IMAGE_NAME_TIMESTAMP="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:5.0"-"$TIMESTAMP"
@@ -58,15 +58,15 @@ spec:
                       IMAGE_NAME="quay.io/openshift-pipeline/ci:latest"
                       IMAGE_NAME_TIMESTAMP="quay.io/openshift-pipeline/ci/5.0"-"$TIMESTAMP"
                   fi
-                elif [[ "$BRANCH_NAME" == release-* ]]; then 
+                elif [[ {{ target_branch }} == release-* ]]; then 
                   if [ {{ event_type }} == "pull_request" ]; then
-                    IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:${BRANCH_NAME#release-}"
+                    IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:{{{ target_branch }}#release-}"
                   else
-                    IMAGE_NAME="quay.io/openshift-pipeline/ci:${BRANCH_NAME#release-}"
+                    IMAGE_NAME="quay.io/openshift-pipeline/ci:{{{ target_branch }}#release-}"
                   fi
                   IMAGE_NAME_TIMESTAMP="$IMAGE_NAME-$TIMESTAMP"
                 else
-                    echo "Error: Branch name '$BRANCH_NAME' is not appropriate."
+                    echo "Error: Branch name {{ target_branch }} is not appropriate."
                     exit 1
                 fi
 
