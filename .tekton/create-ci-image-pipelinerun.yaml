@@ -1,0 +1,115 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: create-ci-image-pipelinerun
+  annotations:
+    pipelinesascode.tekton.dev/on-cel-expression: |
+      event == "pull_request" || event == "push" && "Dockerfile.CI".pathChanged()
+    pipelinesascode.tekton.dev/max-keep-runs: "5"
+spec:
+  params:
+    - name: repo_url
+      value: "{{ repo_url }}"
+    - name: revision
+      value: "{{ revision }}"
+  pipelineSpec:
+    params:
+      - name: repo_url
+      - name: revision
+    workspaces:
+      - name: source
+      - name: basic-auth
+    tasks:
+      - name: fetch-repository
+        taskRef:
+          kind: ClusterTask
+          name: git-clone
+        workspaces:
+          - name: output
+            workspace: source
+          - name: basic-auth
+            workspace: basic-auth
+        params:
+          - name: url
+            value: $(params.repo_url)
+          - name: revision
+            value: $(params.revision)
+      - name: generate-image-name
+        taskSpec: 
+          results:
+            - name: image-name
+            - name: image-name-timestamp
+          steps: 
+            - name: generate-image-name
+              image: quay.io/openshift-pipeline/ci
+              script: | 
+                #!/usr/bin/env bash
+                BRANCH_NAME={{ target_branch }}
+                EVENT_TYPE={{ event_type }}
+                IMAGE_NAME=""
+                IMAGE_NAME_TIMESTAMP=""
+                TIMESTAMP=$(date +"%y%m%d")
+
+                if [ "$BRANCH_NAME" == "master" ]; then 
+                  if [ "$EVENT_TYPE" == "pull_request" ]; then
+                      IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:latest"
+                      IMAGE_NAME_TIMESTAMP="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:5.0"-"$TIMESTAMP"
+                  else
+                      IMAGE_NAME="quay.io/openshift-pipeline/ci:latest"
+                      IMAGE_NAME_TIMESTAMP="quay.io/openshift-pipeline/ci/5.0"-"$TIMESTAMP"
+                  fi
+                elif [[ "$BRANCH_NAME" == release-* ]]; then 
+                  if [ "$EVENT_TYPE" == "pull_request" ]; then
+                    IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:${BRANCH_NAME#release-}"
+                  else
+                    IMAGE_NAME="quay.io/openshift-pipeline/ci:${BRANCH_NAME#release-}"
+                  fi
+                  IMAGE_NAME_TIMESTAMP="$IMAGE_NAME-$TIMESTAMP"
+                else
+                    echo "Error: Branch name '$BRANCH_NAME' is not appropriate."
+                    exit 1
+                fi
+
+                echo -n "$IMAGE_NAME" | tee $(results.image-name.path)
+                echo -n "$IMAGE_NAME_TIMESTAMP" | tee $(results.image-name-timestamp.path)
+        runAfter: 
+          - fetch-repository
+      - name: buildah 
+        taskRef:
+          kind: ClusterTask
+          name: buildah
+        params:
+          - name: IMAGE
+            value: $(tasks.generate-image-name.results.image-name)
+          - name: DOCKERFILE
+            value: ./Dockerfile.CI
+        runAfter: 
+          - generate-image-name
+        workspaces:
+          - name: source
+            workspace: source
+      - name: skopeo-copy
+        taskRef: 
+          kind: ClusterTask
+          name: skopeo-copy
+        params:
+          - name: srcImageUrl
+            value: $(tasks.generate-image-name.results.image-name)
+          - name: destImageUrl
+            value: $(tasks.generate-image-name.results.image-name-timestamp)
+        runAfter:
+          - buildah
+
+  workspaces:
+    - name: source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: basic-auth
+      secret:
+        secretName: "{{ git_auth_secret }}"
