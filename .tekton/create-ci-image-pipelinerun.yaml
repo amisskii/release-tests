@@ -60,9 +60,9 @@ spec:
                   fi
                 elif [[ {{ target_branch }} == release-* ]]; then 
                   if [ {{ event_type }} == "pull_request" ]; then
-                    IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:{{{ target_branch }}#release-}"
+                    IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:${{{ target_branch }}#release-}"
                   else
-                    IMAGE_NAME="quay.io/openshift-pipeline/ci:{{{ target_branch }}#release-}"
+                    IMAGE_NAME="quay.io/openshift-pipeline/ci:${{{ target_branch }}#release-}"
                   fi
                   IMAGE_NAME_TIMESTAMP="$IMAGE_NAME-$TIMESTAMP"
                 else
