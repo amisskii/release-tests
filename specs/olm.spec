@@ -26,6 +26,10 @@ Steps:
     | 1    | testdata/pvc/tekton-logs.yaml  |
     | 2    | testdata/results/result.yaml   | 
   * Create Results route
+  * Apply in namespace "openshift-pipelines"
+    | S.NO | resource_dir                                 |
+    |------|----------------------------------------------|
+    | 1    | testdata/chains/secrets/signing-secret.yaml  |
   * Configure GitHub token for git resolver in TektonConfig
   * Configure the bundles resolver
   * Validate pipelines deployment
