@@ -17,6 +17,8 @@ vendor/
 # Temporary TLS certificates used for testing
 testdata/triggers/certs/
 
+testdata/chais/secrets/
+
 logs/
 
 reports/
