@@ -44,7 +44,9 @@ spec:
                 #!/usr/bin/env bash
 
                 if [ "$(workspaces.config.bound)" == "true" ] ; then
-                  cat $workspaces.config.path > $(workspaces.dockerconfig.path)/connfig.json
+                  ls $(workspaces.config.path)
+                  echo $(workspaces.config.path)
+                  cat $(workspaces.config.path) > $(workspaces.dockerconfig.path)/connfig.json
                 fi 
         runAfter: 
           - fetch-repository
