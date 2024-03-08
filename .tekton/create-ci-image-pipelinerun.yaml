@@ -74,6 +74,7 @@ spec:
         runAfter: 
           - fetch-repository
       - name: buildah 
+        onError: continue
         taskRef:
           kind: ClusterTask
           name: buildah
@@ -90,6 +91,7 @@ spec:
           - name: dockerconfig
             workspace: dockerconfig
       - name: buildah2
+        onError: continue
         taskRef: 
           kind: ClusterTask
           name: buildah
