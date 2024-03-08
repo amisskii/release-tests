@@ -90,7 +90,7 @@ spec:
           - name: dockerconfig
             workspace: dockerconfig
       - name: buildah2
-        taskref: 
+        taskRef: 
           kind: ClusterTask
           name: buildah
         params:
