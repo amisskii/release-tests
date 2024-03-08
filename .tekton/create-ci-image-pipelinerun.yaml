@@ -175,7 +175,7 @@ spec:
     - name: dockerconfig
       volumeClaimTemplate:
         spec: 
-          accessMode:
+          accessModes:
             - ReadWriteOnce
           resources:
             requests:
