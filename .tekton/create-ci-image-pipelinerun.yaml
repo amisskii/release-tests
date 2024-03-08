@@ -21,6 +21,7 @@ spec:
       - name: source
       - name: images-url
       - name: dockerconfig
+      - name: config
     tasks:
       - name: fetch-repository
         taskRef:
@@ -34,6 +35,22 @@ spec:
             value: $(params.repo_url)
           - name: revision
             value: $(params.revision)
+      - name: create-config-file
+        taskSpec:
+          steps:
+            - name: create-config-file
+              image: quay.io/openshift-pipeline/ci
+              script: |
+                #!/usr/bin/env bash
+
+                if [ "$(workspaces.config.bound)" == "true" ] ; then
+                  cat $workspaces.config.path > $(workspaces.dockerconfig.path)/connfig.json
+                fi 
+        runAfter: 
+          - fetch-repository
+        workspaces: 
+          - name: config
+            workspace: config
       - name: generate-image-name
         taskSpec: 
           results:
@@ -79,9 +96,8 @@ spec:
                 echo -n "$IMAGE_NAME_TIMESTAMP" | tee $(results.image-name-timestamp.path)
                 echo -n "$REPOSITORY" | tee $(results.repository.path)
         runAfter: 
-          - fetch-repository
+          - create-config-file
       - name: buildah 
-        onError: continue
         taskRef:
           kind: ClusterTask
           name: buildah
@@ -103,7 +119,6 @@ spec:
             values: 
               - "$(tasks.generate-image-name.results.repository)"
       - name: buildah2
-        onError: continue
         taskRef: 
           kind: ClusterTask
           name: buildah
@@ -158,7 +173,15 @@ spec:
 
   workspaces:
     - name: dockerconfig
-      secret: 
+      volumeClaimTemplate:
+        spec: 
+          accessMode:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: config
+      secret:
         secretName: quay-io-dockerconfig
     - name: images-url
       emptyDir: {}
