@@ -119,6 +119,7 @@ spec:
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
           - buildah
+          - buildah2
     finally:
       - name: send-slack-notification
         taskRef:
