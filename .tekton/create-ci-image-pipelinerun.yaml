@@ -104,20 +104,6 @@ spec:
             operator: in 
             values: 
               - "$(tasks.generate-image-name.results.repository)"
-      - name: skopeo-copy-push
-        taskRef: 
-          kind: ClusterTask
-          name: skopeo-copy
-        workspaces:
-          - name: images-url
-            workspace: images-url
-        params:
-          - name: srcImageURL
-            value: docker://$(tasks.generate-image-name.results.image-name)
-          - name: destImageURL
-            value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
-        runAfter:
-          - buildah-push
       - name: buildah-pull-request
         taskRef: 
           kind: ClusterTask
@@ -137,6 +123,25 @@ spec:
             operator: in 
             values: 
               - "$(tasks.generate-image-name.results.repository)"
+      - name: skopeo-copy-push
+        taskRef: 
+          kind: ClusterTask
+          name: skopeo-copy
+        workspaces:
+          - name: images-url
+            workspace: images-url
+        params:
+          - name: srcImageURL
+            value: docker://$(tasks.generate-image-name.results.image-name)
+          - name: destImageURL
+            value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
+        runAfter:
+          - buildah-push
+        when:
+          - input: "quay.io"
+            operator: in 
+            values: 
+              - "$(tasks.generate-image-name.results.repository)"
       - name: skopeo-copy-pull-request
         taskRef: 
           kind: ClusterTask
@@ -151,6 +156,12 @@ spec:
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
           - buildah-pull-request
+        when:
+          - input: "image-registry"
+            operator: in 
+            values: 
+              - "$(tasks.generate-image-name.results.repository)"
+          
     finally:
       - name: send-slack-notification-request
         taskRef:
@@ -173,7 +184,6 @@ spec:
             operator: in 
             values: 
               - "$(tasks.generate-image-name.results.repository)"
-            
       - name: send-slack-notification-push
         taskRef:
           resolver: cluster
