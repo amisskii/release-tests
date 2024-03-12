@@ -140,7 +140,7 @@ spec:
         when: 
           - input: $(tasks.buildah-pull-request.status)
             operator: in
-            values: ["Succeed"]
+            values: ["Succeeded"]
       - name: skopeo-copy-push
         taskRef: 
           kind: ClusterTask
@@ -158,7 +158,7 @@ spec:
         when: 
           - input: $(tasks.buildah-push.status)
             operator: in
-            values: ["Succeed"]
+            values: ["Succeeded"]
     finally:
       - name: send-slack-notification-request
         taskRef:
