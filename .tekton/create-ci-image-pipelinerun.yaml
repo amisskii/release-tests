@@ -137,11 +137,6 @@ spec:
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
           - buildah-pull-request
-        when: 
-          - input: "image-registry"
-            operator: in 
-            values: 
-              - "$(tasks.generate-image-name.results.repository)"
       - name: skopeo-copy-push
         taskRef: 
           kind: ClusterTask
@@ -156,11 +151,13 @@ spec:
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
           - buildah-push
+
         when: 
           - input: "image-registry"
             operator: in 
             values: 
               - "$(tasks.generate-image-name.results.repository)"
+
     finally:
       - name: send-slack-notification-request
         taskRef:
