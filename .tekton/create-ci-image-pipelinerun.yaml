@@ -157,7 +157,7 @@ spec:
         runAfter:
           - buildah-push
         when: 
-          - input: "image-registry"
+          - input: "quay.io"
             operator: in 
             values: 
               - "$(tasks.generate-image-name.results.repository)"
