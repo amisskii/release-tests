@@ -56,8 +56,8 @@ spec:
 
                 if [ "$BRANCH_NAME" == "master" ]; then 
                   if [ {{ event_type }} == "pull_request" ]; then
-                      IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:latest"
-                      IMAGE_NAME_TIMESTAMP="image-registry.openshift-image-registry.svc:5000/pipelines-ci/ci:5.0-$TIMESTAMP"
+                      IMAGE_NAME="image-registry.openshift-image-registry.svc:5000/pipelines-ci/chainstest:latest"
+                      IMAGE_NAME_TIMESTAMP="image-registry.openshift-image-registry.svc:5000/pipelines-ci/chainstest:5.0-$TIMESTAMP"
                       REPOSITORY="image-registry"
                   else
                       IMAGE_NAME="quay.io/openshift-pipeline/chainstest:latest"
