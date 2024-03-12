@@ -152,7 +152,24 @@ spec:
         runAfter:
           - buildah-push
     finally:
-      - name: send-slack-notification
+      - name: send-slack-notification-request
+        taskRef:
+          resolver: cluster
+          params: 
+          - name: kind
+            value: task
+          - name: name
+            value: send-slack-notification
+          - name: namespace
+            value: pipelines-ci
+        params:
+          - name: MESSAGE
+            value: "<icon> Uploading IS image *<run_status>* <icon> <<logs_url>|logs>"
+        when:
+          - input: $(tasks.skopeo-copy-pull-request.status)
+            operator: in
+            values: ["Failed", "None"]
+      - name: send-slack-notification-push
         taskRef:
           resolver: cluster
           params: 
@@ -166,7 +183,7 @@ spec:
           - name: MESSAGE
             value: "<icon> Uploading CI image *<run_status>* <icon> <<logs_url>|logs>"
         when:
-          - input: $(tasks.skopeo-copy.status)
+          - input: $(tasks.skopeo-copy-push.status)
             operator: in
             values: ["Failed", "None"]
 
