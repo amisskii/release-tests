@@ -136,6 +136,7 @@ spec:
           - name: destImageURL
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
+          - generate-image-name
           - buildah-pull-request
       - name: skopeo-copy-push
         taskRef: 
@@ -150,14 +151,9 @@ spec:
           - name: destImageURL
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
+          - generate-image-name
           - buildah-push
-
-        when: 
-          - input: "quay.io"
-            operator: in 
-            values: 
-              - "$(tasks.generate-image-name.results.repository)"
-
+          
     finally:
       - name: send-slack-notification-request
         taskRef:
