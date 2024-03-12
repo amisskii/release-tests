@@ -136,7 +136,6 @@ spec:
           - name: destImageURL
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
-          - generate-image-name
           - buildah-pull-request
       - name: skopeo-copy-push
         taskRef: 
@@ -151,7 +150,6 @@ spec:
           - name: destImageURL
             value: docker://$(tasks.generate-image-name.results.image-name-timestamp)
         runAfter:
-          - generate-image-name
           - buildah-push
           
     finally:
