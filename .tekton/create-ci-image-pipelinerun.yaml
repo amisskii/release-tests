@@ -138,10 +138,9 @@ spec:
         runAfter:
           - buildah-pull-request
         when: 
-          - input: "image-registry"
-            operator: in 
-            values: 
-              - "$(tasks.generate-image-name.results.repository)"
+          - input: $(tasks.buildah-pull-request.status)
+            operator: in
+            values: ["Succeed"]
       - name: skopeo-copy-push
         taskRef: 
           kind: ClusterTask
@@ -157,10 +156,9 @@ spec:
         runAfter:
           - buildah-push
         when: 
-          - input: "quay.io"
-            operator: in 
-            values: 
-              - "$(tasks.generate-image-name.results.repository)"
+          - input: $(tasks.buildah-push.status)
+            operator: in
+            values: ["Succeed"]
     finally:
       - name: send-slack-notification-request
         taskRef:
