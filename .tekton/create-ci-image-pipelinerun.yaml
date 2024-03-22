@@ -119,10 +119,10 @@ spec:
           - name: source
             workspace: source
         when: 
-          - input: "image-registry"
+          - input: "{{ event_type }}"
             operator: in 
             values: 
-              - "$(tasks.generate-image-name.results.repository)"
+              - "pull_request"
       - name: skopeo-copy
         taskRef: 
           kind: ClusterTask
