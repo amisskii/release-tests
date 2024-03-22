@@ -100,10 +100,10 @@ spec:
           - name: dockerconfig
             workspace: dockerconfig
         when: 
-          - input: "quay.io"
+          - input: "{{ event_type }}"
             operator: in 
             values: 
-              - "$(tasks.generate-image-name.results.repository)"
+              - "push"
       - name: buildah-pull-request
         taskRef: 
           kind: ClusterTask
