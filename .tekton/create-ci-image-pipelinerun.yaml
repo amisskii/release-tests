@@ -91,7 +91,7 @@ spec:
           - name: IMAGE
             value: $(tasks.generate-image-name.results.image-name)
           - name: DOCKERFILE
-            value: ./Dockerfile.CI
+            value: Dockerfile.CI
         runAfter: 
           - generate-image-name
         workspaces:
